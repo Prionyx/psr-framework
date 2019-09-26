@@ -8,5 +8,12 @@ require 'vendor/autoload.php';
 $request = RequestFactory::fromGlobals();
 
 $name = $request->getQueryParams()['name'] ?? 'Guest';
-header('X-Developer: Test');
-echo 'Hello, ' . $name . '!';
+
+$response = (new Response('Hello, ' . $name . '!'))
+    ->withHeader('X-Developer', 'Test');
+
+header('HTTP/1.0' . $response->getStatusCode() . ' ' . $response->getReasonPhrase());
+foreach ($response->getHeaders() as $$name => $value) {
+    header($name . ': . $value');
+}
+echo $response->getBody();
