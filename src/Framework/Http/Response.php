@@ -23,11 +23,11 @@ class Response implements ResponseInterface
 
     public function __construct($body, $status = 200)
     {
-        $this->body = $body;
+        $this->body = $body instanceof StreamInterface ? $body : new Stream($body);
         $this->statusCode = $status;
     }
 
-    public function getBody()
+    public function getBody(): StreamInterface
     {
         return $this->body;
     }

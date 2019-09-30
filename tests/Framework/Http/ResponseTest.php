@@ -11,7 +11,8 @@ class ResponseTest extends TestCase
     {
         $response = new Response($body = 'Body');
 
-        self::assertEquals($body, $response->getBody());
+        self::assertEquals($body, $response->getBody()->getContents());
+        self::assertEquals($body, (string)$response->getBody());
         self::assertEquals(200, $response->getStatusCode());
         self::assertEquals('OK', $response->getReasonPhrase());
     }
@@ -20,7 +21,8 @@ class ResponseTest extends TestCase
     {
         $response = new Response($body = 'Empty', $status = 404);
 
-        self::assertEquals($body, $response->getBody());
+        self::assertEquals($body, $response->getBody()->getContents());
+        self::assertEquals(mb_strlen($body), $response->getBody()->getSize());
         self::assertEquals($status, $response->getStatusCode());
         self::assertEquals('Not Found', $response->getReasonPhrase());
     }
