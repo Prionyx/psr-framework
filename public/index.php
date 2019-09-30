@@ -1,8 +1,8 @@
 <?php
 
-use Framework\Http\ResponseSender;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\ServerRequestFactory;
+use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
@@ -14,5 +14,5 @@ $name = $request->getQueryParams()['name'] ?? 'Guest';
 $response = (new HtmlResponse('Hello, ' . $name . '!'))
     ->withHeader('X-Developer', 'Test');
 
-$emitter = new ResponseSender();
-$emitter->send($response);
+$emitter = new SapiEmitter();
+$emitter->emit($response);
