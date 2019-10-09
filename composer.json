@@ -14,11 +14,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Framework\\": "src/Framework/"
+            "App\\": "src/App/",
+            "Framework\\": "src/Framework/",
+            "Tests\\": "tests/"
         }
     },
     "scripts": {
-        "serve": "php -S 0.0.0.0:8080 -t public public/index.php",
+        "serve": "php -S 0.0.0.0:8080 -t public",
         "test": "phpunit --colors=always"
     }
 }
