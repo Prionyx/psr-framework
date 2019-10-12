@@ -5,7 +5,7 @@ use Aura\Router\RouterContainer;
 use Framework\Http\ActionResolver;
 use Framework\Http\Router\AuraRouteAdapter;
 use Framework\Http\Router\Exception\RequestNotMatchedException;
-use Zend\Diactoros\Response\JsonResponse;
+use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\ServerRequestFactory;
 use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 
@@ -14,11 +14,16 @@ require 'vendor/autoload.php';
 
 ### Initialization
 
+$params = [
+    'users' => ['admin' => 'password'],
+];
+
 $aura = new RouterContainer();
 $routes = $aura->getMap();
 
 $routes->get('home', '/', Action\HelloAction::class);
 $routes->get('about', '/about', Action\AboutAction::class);
+$routes->get('cabinet', '/cabinet', new Action\CabinetAction($params['users']));
 $routes->get('blog', '/blog', Action\Blog\IndexAction::class);
 $routes->get('blog_show', '/blog/{id}', Action\Blog\ShowAction::class, ['id' => '\d+']);
 
@@ -37,7 +42,7 @@ try {
     $action = $resolver->resove($handler);
     $response = $action($reqest);
 } catch (RequestNotMatchedException $e) {
-    $response = new JsonResponse(['error' => 'Undefined page'], 404);
+    $response = new HtmlResponse('Undefined page', 404);
 }
 
 ### Postprocessing

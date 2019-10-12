@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\App\Http\Action;
+namespace Tests\App\Http\Action\Blog;
 
 use App\Http\Action\HelloAction;
 use PHPUnit\Framework\TestCase;
