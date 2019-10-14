@@ -27,11 +27,14 @@ $routes->get('home', '/', Action\HelloAction::class);
 $routes->get('about', '/about', Action\AboutAction::class);
 
 $routes->get('cabinet', '/cabinet', function (ServerRequestInterface $request) use ($params) {
+    $profiler = new Middleware\ProfilerMiddleware();
     $auth = new Middleware\BasicAuthMiddleware($params['users']);
     $cabinet = new Action\CabinetAction();
 
-    return $auth($request, function (ServerRequestInterface $reqest) use ($cabinet) {
-        return $cabinet($reqest);
+    return $profiler($request, function (ServerRequestInterface $request) use ($auth, $cabinet) {
+        return $auth($request, function (ServerRequestInterface $request) use ($cabinet) {
+            return $cabinet($request);
+        });
     });
 });
 
