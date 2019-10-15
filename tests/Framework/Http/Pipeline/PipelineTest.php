@@ -2,6 +2,7 @@
 
 namespace Tests\Framework\Http\Pipeline;
 
+use Framework\Http\Pipeline\Pipeline;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\JsonResponse;
@@ -9,7 +10,7 @@ use Zend\Diactoros\ServerRequest;
 
 class PipelineTest extends TestCase
 {
-    public function testPipe()
+    public function testPipe(): void
     {
         $pipeline = new Pipeline();
 
@@ -20,7 +21,7 @@ class PipelineTest extends TestCase
 
         $this->assertJsonStringEqualsJsonString(
             json_encode(['middleware-1' => 1, 'middleware-2' => 2]),
-            $response->getBody()->getContent()
+            $response->getBody()->getContents()
         );
     }
 }
