@@ -37,7 +37,7 @@ $router = new AuraRouteAdapter($aura);
 $resolver = new MiddlewareResolver();
 $pipeline = new Pipeline();
 
-$pipeline->pipe($resolver->resove(Middleware\ProfilerMiddleware::class));
+$pipeline->pipe($resolver->resolve(Middleware\ProfilerMiddleware::class));
 
 ### Running
 
@@ -48,15 +48,7 @@ try {
         $reqest = $reqest->withAttribute($attribute, $value);
     }
     $handler = $result->getHeader();
-    if (is_array($handler)) {
-        $middleware = new Pipeline();
-        foreach ($handler as $item) {
-            $middleware->pipe($resolver->resove($item));
-        }
-    } else {
-        $middleware = $resolver->resove($handler);
-    }
-    $pipeline->pipe($middleware);
+    $pipeline->pipe($resolver->resolve($handler));
 } catch (RequestNotMatchedException $e) {}
 
 $response = $pipeline($reqest, new Middleware\NotFoundHandler());
