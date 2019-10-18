@@ -47,11 +47,16 @@ try {
     foreach ($result->getAttributes() as $attribute => $value) {
         $reqest = $reqest->withAttribute($attribute, $value);
     }
-    $handlers = $result->getHeader();
-    foreach (is_array($handlers) ? $handlers : [$handlers] as $handler) {
-        $pipeline->pipe($resolver->resove($handler));
+    $handler = $result->getHeader();
+    if (is_array($handler)) {
+        $middleware = new Pipeline();
+        foreach ($handler as $item) {
+            $middleware->pipe($resolver->resove($item));
+        }
+    } else {
+        $middleware = $resolver->resove($handler);
     }
-    $response = $pipeline($reqest, new Middleware\NotFoundHandler());
+    $pipeline->pipe($middleware);
 } catch (RequestNotMatchedException $e) {}
 
 $response = $pipeline($reqest, new Middleware\NotFoundHandler());
