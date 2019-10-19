@@ -3,8 +3,8 @@
 use App\Http\Action;
 use App\Http\Middleware;
 use Aura\Router\RouterContainer;
+use Framework\Http\Application;
 use Framework\Http\Pipeline\MiddlewareResolver;
-use Framework\Http\Pipeline\Pipeline;
 use Framework\Http\Router\AuraRouteAdapter;
 use Framework\Http\Router\Exception\RequestNotMatchedException;
 use Zend\Diactoros\ServerRequestFactory;
@@ -34,10 +34,11 @@ $routes->get('blog', '/blog', Action\Blog\IndexAction::class);
 $routes->get('blog_show', '/blog/{id}', Action\Blog\ShowAction::class, ['id' => '\d+']);
 
 $router = new AuraRouteAdapter($aura);
-$resolver = new MiddlewareResolver();
-$pipeline = new Pipeline();
 
-$pipeline->pipe($resolver->resolve(Middleware\ProfilerMiddleware::class));
+$resolver = new MiddlewareResolver();
+$app = new Application($resolver);
+
+$app->pipe(Middleware\ProfilerMiddleware::class);
 
 ### Running
 
@@ -47,11 +48,10 @@ try {
     foreach ($result->getAttributes() as $attribute => $value) {
         $reqest = $reqest->withAttribute($attribute, $value);
     }
-    $handler = $result->getHeader();
-    $pipeline->pipe($resolver->resolve($handler));
+    $app->pipe($result->getHandler());
 } catch (RequestNotMatchedException $e) {}
 
-$response = $pipeline($reqest, new Middleware\NotFoundHandler());
+$response = $app($reqest, new Middleware\NotFoundHandler());
 
 ### Postprocessing
 

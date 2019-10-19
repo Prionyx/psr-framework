@@ -20,7 +20,7 @@ class Result
         return $this->name;
     }
 
-    public function getHeader()
+    public function getHandler()
     {
         return $this->handler;
     }
