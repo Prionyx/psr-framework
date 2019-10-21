@@ -36,7 +36,7 @@ $routes->get('blog_show', '/blog/{id}', Action\Blog\ShowAction::class, ['id' => 
 $router = new AuraRouteAdapter($aura);
 
 $resolver = new MiddlewareResolver();
-$app = new Application($resolver);
+$app = new Application($resolver, new Middleware\NotFoundHandler());
 
 $app->pipe(Middleware\ProfilerMiddleware::class);
 
@@ -51,7 +51,7 @@ try {
     $app->pipe($result->getHandler());
 } catch (RequestNotMatchedException $e) {}
 
-$response = $app($reqest, new Middleware\NotFoundHandler());
+$response = $app->run($reqest);
 
 ### Postprocessing
 
