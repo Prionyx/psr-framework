@@ -7,7 +7,6 @@ use Framework\Http\Application;
 use Framework\Http\Pipeline\MiddlewareResolver;
 use Framework\Http\Router\AuraRouteAdapter;
 use Framework\Http\Router\Exception\RequestNotMatchedException;
-use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\ServerRequestFactory;
 use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 
@@ -17,6 +16,7 @@ require 'vendor/autoload.php';
 ### Initialization
 
 $params = [
+    'debug' => true,
     'users' => ['admin' => 'password'],
 ];
 
@@ -39,6 +39,7 @@ $router = new AuraRouteAdapter($aura);
 $resolver = new MiddlewareResolver();
 $app = new Application($resolver, new Middleware\NotFoundHandler());
 
+$app->pipe(new Middleware\ErrorHandlerMiddleware($params['debug']));
 $app->pipe(Middleware\CredentialsMiddleware::class);
 $app->pipe(Middleware\ProfilerMiddleware::class);
 
