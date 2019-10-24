@@ -14,10 +14,10 @@ class Pipeline
         $this->queue = new \SplQueue();
     }
 
-    public function __invoke(ServerRequestInterface $request, callable $default): ResponseInterface
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $default): ResponseInterface
     {
         $delegate = new Next(clone $this->queue, $default);
-        return $delegate($request);
+        return $delegate($request, $response);
     }
 
     public function pipe(callable $middleware): void
