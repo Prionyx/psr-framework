@@ -11,7 +11,16 @@ class Container
         if (!array_key_exists($id, $this->definitions)) {
             throw new ServiceNotFoundException('Uncnown sevice "' . $id . '"');
         }
-        return $this->definitions[$id];
+
+        $definitions = $this->definitions[$id];
+
+        if ($definitions instanceof \Closure) {
+            $result = $definitions();
+        } else {
+            $result = $definitions;
+        }
+
+        return $result;
     }
 
     public function set($id, $value): void
