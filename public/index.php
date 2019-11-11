@@ -3,6 +3,7 @@
 use App\Http\Action;
 use App\Http\Middleware;
 use Aura\Router\RouterContainer;
+use Framework\Container\Container;
 use Framework\Http\Application;
 use Framework\Http\Pipeline\MiddlewareResolver;
 use Framework\Http\Router\AuraRouteAdapter;
@@ -15,12 +16,22 @@ require 'vendor/autoload.php';
 
 ini_set('display_errors', 'on');
 
-### Initialization
+### Configuration
 
-$params = [
+$container = new Container();
+
+$container->set('config', [
     'debug' => true,
     'users' => ['admin' => 'password'],
-];
+]);
+
+$container->set('middleware.basic_auth', function (Container $container) {
+    return new Middleware\BasicAuthMiddleware($container->get('config')['users']);
+});
+
+$container->set('middleware.error_handler', function (Container $container) {
+    return new Middleware\ErrorHandlerMiddleware($container->get('config')['debug']);
+});
 
 $aura = new RouterContainer();
 $routes = $aura->getMap();
@@ -29,7 +40,7 @@ $routes->get('home', '/', Action\HelloAction::class);
 $routes->get('about', '/about', Action\AboutAction::class);
 
 $routes->get('cabinet', '/cabinet', [
-    new Middleware\BasicAuthMiddleware($params['users']),
+    $container->get('middleware.basic_auth'),
     Action\CabinetAction::class,
 ]);
 
@@ -41,7 +52,7 @@ $router = new AuraRouteAdapter($aura);
 $resolver = new MiddlewareResolver();
 $app = new Application($resolver, new Middleware\NotFoundHandler());
 
-//$app->pipe(new Middleware\ErrorHandlerMiddleware($params['debug']));
+$app->pipe($container->get('middleware.error_handler'));
 $app->pipe(Middleware\CredentialsMiddleware::class);
 $app->pipe(Middleware\ProfilerMiddleware::class);
 $app->pipe(new Framework\Http\Middleware\RouteMiddleware($router));
