@@ -31,6 +31,7 @@ $container->set('config', [
 $container->set(Application::class, function (Container $container) {
     return new Application(
         $container->get(MiddlewareResolver::class),
+        $container->get(Router::class),
         new Middleware\NotFoundHandler(),
         new Response()
     );
@@ -57,21 +58,7 @@ $container->set(RouteMiddleware::class, function (Container $container) {
 });
 
 $container->set(Router::class, function (Container $container) {
-    $aura = new RouterContainer();
-    $routes = $aura->getMap();
-
-    $routes->get('home', '/', Action\HelloAction::class);
-    $routes->get('about', '/about', Action\AboutAction::class);
-
-    $routes->get('cabinet', '/cabinet', [
-        $container->get(Middleware\BasicAuthMiddleware::class),
-        Action\CabinetAction::class,
-    ]);
-
-    $routes->get('blog', '/blog', Action\Blog\IndexAction::class);
-    $routes->get('blog_show', '/blog/{id}', Action\Blog\ShowAction::class, ['id' => '\d+']);
-
-    return new AuraRouteAdapter($aura);
+    return new AuraRouteAdapter(new Aura\Router\RouterContainer());
 });
 
 
@@ -83,6 +70,18 @@ $app->pipe(Middleware\CredentialsMiddleware::class);
 $app->pipe(Middleware\ProfilerMiddleware::class);
 $app->pipe($container->get(Framework\Http\Middleware\RouteMiddleware::class));
 $app->pipe($container->get(Framework\Http\Middleware\DispatchMiddleware::class));
+
+
+$app->get('home', '/', Action\HelloAction::class);
+$app->get('about', '/about', Action\AboutAction::class);
+
+$app->get('cabinet', '/cabinet', [
+$container->get(Middleware\BasicAuthMiddleware::class),
+    Action\CabinetAction::class,
+]);
+
+$app->get('blog', '/blog', Action\Blog\IndexAction::class);
+$app->get('blog_show', '/blog/{id}', Action\Blog\ShowAction::class, ['id' => '\d+']);
 
 ### Running
 
