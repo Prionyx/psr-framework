@@ -3,8 +3,6 @@
 use App\Http\Middleware;
 use Framework\Container\Container;
 use Framework\Http\Application;
-use Framework\Http\Middleware\DispatchMiddleware;
-use Framework\Http\Middleware\RouteMiddleware;
 use Framework\Http\Pipeline\MiddlewareResolver;
 use Framework\Http\Router\AuraRouteAdapter;
 use Framework\Http\Router\Router;
@@ -32,14 +30,6 @@ $container->set(Middleware\ErrorHandlerMiddleware::class, function (Container $c
     return new Middleware\ErrorHandlerMiddleware($container->get('config')['debug']);
 });
 
-$container->set(DispatchMiddleware::class, function (Container $container) {
-    return new DispatchMiddleware($container->get(MiddlewareResolver::class));
-});
-
 $container->set(MiddlewareResolver::class, function (Container $container) {
     return new MiddlewareResolver($container);
-});
-
-$container->set(RouteMiddleware::class, function (Container $container) {
-    return new RouteMiddleware($container->get(Router::class));
 });
