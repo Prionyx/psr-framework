@@ -3,15 +3,16 @@
 namespace Framework\Http;
 
 use Framework\Http\Pipeline\MiddlewareResolver;
-use Framework\Http\Pipeline\Pipeline;
 use Framework\Http\Router\RouteData;
 use Framework\Http\Router\Router;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Zend\Stratigility\MiddlewarePipe;
 
-class Application extends Pipeline
+class Application extends MiddlewarePipe
 {
     private $resolver;
+    private $router;
     private $default;
 
     public function __construct(MiddlewareResolver $resolver, Router $router, callable $default, ResponseInterface $responsePrototype)
@@ -23,9 +24,12 @@ class Application extends Pipeline
         $this->default = $default;
     }
 
-    public function pipe($middleware): void
+    public function pipe($path, $middleware = null): MiddlewarePipe
     {
-        parent::pipe($this->resolver->resolve($middleware));
+        if ($middleware === null) {
+            return parent::pipe($this->resolver->resolve($path, $this->responsePrototype));
+        }
+        return parent::pipe($path, $this->resolver->resolve($middleware, $this->responsePrototype));
     }
 
     public function route($name, $path, $handler, array $methods, array $options = []): void

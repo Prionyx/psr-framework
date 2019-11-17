@@ -2,7 +2,6 @@
 
 use App\Http\Action;
 use App\Http\Middleware;
-use Aura\Router\RouterContainer;
 use Framework\Container\Container;
 use Framework\Http\Application;
 use Framework\Http\Middleware\DispatchMiddleware;
@@ -11,8 +10,8 @@ use Framework\Http\Pipeline\MiddlewareResolver;
 use Framework\Http\Router\AuraRouteAdapter;
 use Framework\Http\Router\Router;
 use Zend\Diactoros\Response;
+use Zend\Diactoros\Response\SapiEmitter;
 use Zend\Diactoros\ServerRequestFactory;
-use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
@@ -61,9 +60,7 @@ $container->set(Router::class, function (Container $container) {
     return new AuraRouteAdapter(new Aura\Router\RouterContainer());
 });
 
-
-$resolver = new MiddlewareResolver();
-$app = new Application($resolver, new Middleware\NotFoundHandler());
+$app = $container->get(Application::class);
 
 $app->pipe($container->get(Middleware\ErrorHandlerMiddleware::class));
 $app->pipe(Middleware\CredentialsMiddleware::class);
@@ -81,7 +78,7 @@ $container->get(Middleware\BasicAuthMiddleware::class),
 ]);
 
 $app->get('blog', '/blog', Action\Blog\IndexAction::class);
-$app->get('blog_show', '/blog/{id}', Action\Blog\ShowAction::class, ['id' => '\d+']);
+$app->get('blog_show', '/blog/{id}', Action\Blog\ShowAction::class, ['tokens' => ['id' => '\d+']]);
 
 ### Running
 
@@ -90,5 +87,5 @@ $response = $app->run($reqest, new Response());
 
 ### Sending
 
-$emitter = new SapiEmitter();
+$emitter = new SapiEmitter;
 $emitter->emit($response);
