@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Middleware;
+
 /** @var \Framework\Container\Container $container */
 /** @var \Framework\Http\Application $app */
 
