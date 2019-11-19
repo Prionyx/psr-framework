@@ -2,7 +2,9 @@
 
 namespace Framework\Container;
 
-class Container implements ContinerInterface
+use Psr\Container\ContainerInterface;
+
+class Container implements ContainerInterface
 {
     private $definitions;
     private $results = [];
