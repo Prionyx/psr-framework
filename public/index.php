@@ -1,20 +1,12 @@
 <?php
 
-use App\Http\Action;
-use App\Http\Middleware;
-use Framework\Container\Container;
 use Framework\Http\Application;
-use Framework\Http\Middleware\DispatchMiddleware;
-use Framework\Http\Middleware\RouteMiddleware;
-use Framework\Http\Pipeline\MiddlewareResolver;
-use Framework\Http\Router\AuraRouteAdapter;
-use Framework\Http\Router\Router;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Response\SapiEmitter;
 use Zend\Diactoros\ServerRequestFactory;
 
 /**
- * @var \Framework\Container\Container $container
+ * @var \Framework\Container\ContainerInterface $container
  * @var \Framework\Http\Application $app
  */
 
