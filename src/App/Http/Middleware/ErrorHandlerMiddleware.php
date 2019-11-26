@@ -23,14 +23,14 @@ class ErrorHandlerMiddleware
         try {
             return $next($reqest);
         } catch (\Throwable $e) {
-            if ($this->debug) {
-                return new \Zend\Diactoros\Response\JsonResponse([
-                    'error' => 'Server error',
-                    'code' => $e->getCode(),
-                    'message' => $e->getMessage(),
-                ], 500);
-            }
-            return new HtmlResponse('Server error', 500);
+            //if ($this->debug) {
+                //return new \Zend\Diactoros\Response\JsonResponse([
+                    //'error' => 'Server error',
+                    //'code' => $e->getCode(),
+                    //'message' => $e->getMessage(),
+                //], 500);
+            //}
+            //return new HtmlResponse('Server error', 500);
         }
     }
 }
