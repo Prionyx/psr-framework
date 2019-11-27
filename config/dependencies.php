@@ -12,14 +12,8 @@ use Psr\Container\ContainerInterface;
 
 return [
     'dependencies' => [
-        'invokables' => [
-            Middleware\CredentialsMiddleware::class,
-            Middleware\ProfilerMiddleware::class,
-            Action\HelloAction::class,
-            Action\AboutAction::class,
-            Action\CabinetAction::class,
-            Action\IndexAction::class,
-            Action\ShowAction::class,
+        'abstract_factories' => [
+            Zend\ServiceManager\AbstractFactory\ReflectionBasedAbstractFactory::class,
         ],
         'factories' => [
             Application::class => function (ContainerInterface $container) {

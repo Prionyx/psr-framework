@@ -28,4 +28,3 @@ $response = $app->run($reqest, new Response());
 
 $emitter = new SapiEmitter;
 $emitter->emit($response);
-
