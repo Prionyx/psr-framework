@@ -5,6 +5,7 @@ use Framework\Http\Application;
 use Framework\Http\Pipeline\MiddlewareResolver;
 use Framework\Http\Router\AuraRouteAdapter;
 use Framework\Http\Router\Router;
+use Framework\Template\TemplateRender;
 use Psr\Container\ContainerInterface;
 
 return [
@@ -29,6 +30,9 @@ return [
             },
             Middleware\ErrorHandlerMiddleware::class => function (ContainerInterface $container) {
                 return new Middleware\ErrorHandlerMiddleware($container->get('config')['debug']);
+            },
+            TemplateRender::class => function () {
+                return new TemplateRender('templates');
             },
         ],
     ],
