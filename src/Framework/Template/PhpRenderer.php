@@ -6,7 +6,6 @@ class PhpRenderer implements TemplateRender
 {
     private $path;
     private $extend;
-    private $params = [];
     private $blocks = [];
     private $blockNames;
 

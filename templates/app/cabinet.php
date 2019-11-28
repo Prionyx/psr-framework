@@ -6,7 +6,7 @@
 
 <?php $this->extend('layout/columns'); ?>
 
-<?php $this->params['title'] = 'Cabinet'; ?>
+<?php $this->beginBlock('title') ?>Cabinet<?php $this->endBlock() ?>
 
 <?php $this->beginBlock('sidebar') ?>
     <div class="panel panel-default">
@@ -20,4 +20,4 @@
     <li class="active">Cabinet</li>
 </ul>
 
-<h1>Cabinet of <? = htmlentities(1name, ENT_QUOTES | ENT_SUBSTITUTE) ?></h1>
+<h1>Cabinet of <? = htmlentities($name, ENT_QUOTES | ENT_SUBSTITUTE) ?></h1>
