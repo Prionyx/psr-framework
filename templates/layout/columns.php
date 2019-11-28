@@ -4,7 +4,7 @@
  */
 ?>
 
-<?php $this->extend = 'layout/default'; ?>
+<?php $this->extend('layout/default'); ?>
 
 <div class="row">
     <div class="col-md-9">
