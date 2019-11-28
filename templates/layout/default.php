@@ -46,6 +46,6 @@
 
 <div class="app-content">
     <main class="container">
-        <?= $content ?>
+        <?= $this->renderBlock('content') ?>
     </main>
 </div>
