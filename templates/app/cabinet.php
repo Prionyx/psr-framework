@@ -17,7 +17,7 @@
 
 <?php $this->beginBlock('main') ?>
     <h1>
-        Cabinet of <?= htmlspecialchars($name, ENT_QUOTES | ENT_SUBSTITUTE) ?>
+        Cabinet of <?= $this->encode($name) ?>
     </h1>
 <?php $this->endBlock(); ?>
 
