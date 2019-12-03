@@ -30,7 +30,7 @@ class AuraRouteAdapter implements Router
 
     public function generate($name, array $params): string
     {
-        $generator = $this->getGenerator();
+        $generator = $this->aura->getGenerator();
         try {
             return $generator->generate($name, $params);
         } catch (RouteNotFound $e) {
