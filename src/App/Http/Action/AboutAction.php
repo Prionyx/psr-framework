@@ -10,7 +10,7 @@ class AboutAction
     private $template;
 
     /**
-     * @param TemplateRende
+     * @param TemplateRender $template
      */
     public function __construct(TemplateRender $template)
     {
