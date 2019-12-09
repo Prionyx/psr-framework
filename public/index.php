@@ -13,7 +13,7 @@ use Zend\Diactoros\ServerRequestFactory;
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
 
-ini_set('display_errors', 'on');
+//ini_set('display_errors', 'on');
 
 $container = require 'config/container.php';
 $app = $container->get(Application::class);
