@@ -1,22 +1,30 @@
 <?php
 
-namespace Framework\Template;
+namespace Framework\Template\Php;
 
-use Framework\Http\Router\Router;
+use Framework\Template\TemplateRender;
 
 class PhpRenderer implements TemplateRender
 {
+    /**
+     * @var Extension[]
+     */
+    private $extensions = [];
     private $path;
     private $extend;
     private $blocks = [];
     private $blockNames;
     private $router;
 
-    public function __construct($path, Router $router)
+    public function __construct($path)
     {
         $this->path = $path;
         $this->blockNames = new \SplStack();
-        $this->router = $router;
+    }
+
+    public function addExtension(Extension $extension): void
+    {
+        $this->extensions[] = $extension;
     }
 
     public function render($name, array $params = []): string
@@ -103,8 +111,14 @@ class PhpRenderer implements TemplateRender
         return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE);
     }
 
-    public function path($name, $params = []): string
+    public function __call($name, $arguments)
     {
-        return $this->router->generate($name, $params);
+        foreach ($this->extensions as $extension) {
+            $functions = $extension->getFunctions();
+            if (array_key_exists($name, $functions)) {
+                return $functions[$name](...$arguments);
+            }
+            throw new \InvalidArgumentException('Undefined function "' . $name . '"');
+        }
     }
 }

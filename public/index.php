@@ -21,8 +21,8 @@ $app = $container->get(Application::class);
 require 'config/pipeline.php';
 require 'config/routes.php';
 
-$reqest = ServerRequestFactory::fromGlobals();
-$response = $app->run($reqest, new Response());
+$request = ServerRequestFactory::fromGlobals();
+$response = $app->run($request, new Response());
 
 ### Sending
 
